@@ -1,8 +1,8 @@
-import { combineReducers } from 'redux';
-import novaPostReducers from './novaPostReducers'
+import { combineReducers } from "redux";
+import novaPostReducers from "./novaPostReducers";
 
 const reducer = combineReducers({
-    novaPostReducers,
+  novaPostReducers,
 });
 
 export default reducer;

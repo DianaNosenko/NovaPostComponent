@@ -1,13 +1,12 @@
-import './App.css';
-import NovaPoshta from './NovaPoshta';
+import "./App.css";
+import NovaPoshta from "./NovaPoshta";
 
 function App() {
   return (
     <div className="App">
-      <NovaPoshta/>
+      <NovaPoshta />
     </div>
   );
 }
 
 export default App;
-
