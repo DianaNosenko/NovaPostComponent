@@ -1,0 +1,60 @@
+.componentWrap {
+    width: 360px;
+    // height: 400px;
+}
+.field {
+    background-color: white;
+    width: calc(inherit + 20px);
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    border-radius: 10px;
+    border: 1px solid black;
+}
+.ul {
+    background-color: white;
+    margin-top: 10px;
+    max-height: 400px;
+    overflow-y: auto;
+    border: 1px solid black;
+}
+.placeholder {
+    display: flex;
+    align-items: center;
+    padding: 0 10px;
+    top: 0;
+    position: sticky;
+    background-color: white;
+    border-bottom: 1px solid rgb(210, 210, 210);
+}
+.input {
+    font-weight: 700;
+    padding: 10px;
+    width: 100%;
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    ::-ms-expand {
+        display: none;
+    }
+    border: none;
+    outline: none;
+}
+.li {
+    padding: 10px;
+    font-size: small;
+}
+.li:hover {
+    background-color: rgb(245, 245, 245);
+
+}
+.selectedElement {
+    background-color: rgb(230, 230, 230);
+}
+#loading-span {
+    display: block;
+    height: 1px;
+    background-color: transparent;
+    visibility: hidden;
+  }
