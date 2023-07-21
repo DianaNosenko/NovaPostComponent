@@ -16,9 +16,13 @@ export function* getCitiesDataSaga(action) {
 }
 
 export function* getWarehousesDataSaga(action) {
+    console.log(action)
     yield put({ type: ACTION.NOVA_POST_REQUEST});
+    if(action.data.newCity){
+        yield put({ type: ACTION.SET_CLEAR_WAREHOUSES_DATA});
+    }
     try {
-        const {data:{data}} = yield request(action.data)
+        const {data:{data}} = yield request(action.data.data)
         if(data){
             yield put({ type: ACTION.GET_WAREHOUSES_DATA_SUCCESS, data});
         }

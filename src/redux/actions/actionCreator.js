@@ -26,3 +26,8 @@ export const setSelectedWarehouse = (data) => ({
     type: ACTION.SET_SELECTED_WAREHOUSE,
     data,
 });
+
+export const setClearWarehousesData = (data) => ({
+    type: ACTION.SET_CLEAR_WAREHOUSES_DATA,
+    data,
+})

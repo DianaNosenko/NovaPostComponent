@@ -2,11 +2,11 @@ import React, { useEffect, useState, useRef} from 'react';
 // import axios from 'axios';
 import styles from './NPCitySelection.module.scss'
 import { bodyCities } from './apiData';
-import { getCitiesDataAction, setSelectedCity, setSelectedCityRef, getWarehousesDataAction, setSelectedWarehouse,} from './redux/actions/actionCreator';
+import { getCitiesDataAction, setSelectedCity, setSelectedCityRef, setSelectedWarehouse, setClearWarehousesData} from './redux/actions/actionCreator';
 import { connect } from 'react-redux';
 
 const NPCitySelection = (props) => {
-  const { getCitiesDataAction, setSelectedCity, setSelectedCityRef, getWarehousesDataAction, setSelectedWarehouse, } = props;
+  const { getCitiesDataAction, setSelectedCity, setSelectedCityRef, setSelectedWarehouse, } = props;
   const { citiesData, selectedCity, selectedCityRef, warehousesData, } = props;
 
     const [citiesInputValue, setCitiesInputValue] = useState('') //считывание ввода пользователя 
@@ -31,9 +31,10 @@ const NPCitySelection = (props) => {
       // city !== '' ? setCitiesInputValue(''): void 0;
       setSelectedCityRef(city.Ref)
       setSelectedWarehouse(''); // Сброс выбранного отделения при изменении города
-      getWarehousesDataAction([]) // сброс массива отделений
+      //setClearWarehousesData() // сброс массива отделений
       setCityOpen(false);
   };
+  console.log(selectedCityRef)
   
   /////////////////Логика пагинации///////////////////////////
   const scrollContainerRef = useRef(null);
@@ -53,6 +54,7 @@ const NPCitySelection = (props) => {
         setClientHeight(visibleHeight)
       }
     };
+    // console.log(scrollHeight, scrollFromTop, clientHeight)
   
     useEffect(() => {
       const scrollEndReached = scrollHeight - (scrollFromTop + clientHeight);
@@ -132,8 +134,9 @@ const NPCitySelection = (props) => {
     getCitiesDataAction: (data) => dispatch(getCitiesDataAction(data)), 
     setSelectedCity: (data) => dispatch(setSelectedCity(data)), 
     setSelectedCityRef: (data) => dispatch(setSelectedCityRef(data)), 
-    getWarehousesDataAction: (data) => dispatch(getWarehousesDataAction(data)), 
+    // getWarehousesDataAction: (data) => dispatch(getWarehousesDataAction(data)), 
     setSelectedWarehouse: (data) => dispatch(setSelectedWarehouse(data)),
+    setClearWarehousesData: (data) => dispatch(setClearWarehousesData(data))
   })
 
   const mapStateToProps = (state) => {

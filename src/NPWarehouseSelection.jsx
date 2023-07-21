@@ -14,29 +14,30 @@ const NPWarehouseSelection = (props) => {
     const [warehouseCurrentPage, setWarehouseCurrentPage] = useState(1)
     const [warehouseFetching, setWarehouseFetching] = useState(true)     
   
+    const methodProperties = { Page: warehouseCurrentPage, Limit: 30, CityRef: selectedCityRef };
+    const newBody = { ...bodyWarehouses, methodProperties };
+
+    // смена данных при смене города
       useEffect(() => {
-        const methodProperties = { Page: warehouseCurrentPage, Limit: 30, CityRef: selectedCityRef };
-        const newBody = { ...bodyWarehouses, methodProperties };
-        
-        if(selectedCityRef.length > 0 ) {
-            getWarehousesDataAction(newBody)
-           
+        if(selectedCityRef.length) {
+            getWarehousesDataAction({data: newBody, newCity: true})
         }
-      // if(warehouseFetching){
-      //   // getWarehousesDataAction(newBody)
-      //   setWarehouseFetching(false);
-      //   console.log(selectedCityRef);
-      // }
-      }, [selectedCityRef
-        // , warehouseFetching
-      ]);
+      }, [selectedCityRef]);
+
+      // пагинация
+      useEffect(() => {
+      if(warehouseFetching){
+        getWarehousesDataAction({data: newBody}) // пагинация
+        setWarehouseFetching(false);
+      }
+      }, [warehouseFetching]);
   
      // Установка выбранного отделения в инпут 
      const handleWarehouseChange = (warehouse) => {
       warehouse !== '' ? setWarehousesOpen(false) : void 0;
   };
-  console.log(warehousesData)
-//   /////////////////Логика пагинации///////////////////////////
+
+ /////////////////Логика пагинации///////////////////////////
   const scrollContainerRef = useRef(null);
     const [scrollHeight, setScrollHeight] = useState(0); // полная высота контейнера
     const [scrollFromTop, setScrollFromTop] = useState(0); // положение скрола от верха

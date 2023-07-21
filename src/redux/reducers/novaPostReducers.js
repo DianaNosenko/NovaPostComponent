@@ -1,9 +1,7 @@
 import ACTION from '../actionTypes'
 
 const initialState = {
-    citiesArray: [],
     citiesData: [],
-    warehousesArray: [],
     warehousesData: [],
     isFetching: true,
     error: null,
@@ -32,12 +30,19 @@ function novaPostReducers(state = initialState, action) {
         }
         //GET_WAREHOUSES_DATA
         case ACTION.GET_WAREHOUSES_DATA_SUCCESS : {
-            console.log(action.data)
+            console.log('set werhouses array reducer')
             return {
                 ...state,
                 isFetching: false,
                 error: null,
-                warehousesData: [...state.warehousesData, ...action.data]
+                warehousesData: [...state.warehousesData, ...action.data]  
+            }
+        }
+        case ACTION.SET_CLEAR_WAREHOUSES_DATA : {
+            console.log('clear data reducer')
+            return {
+                ...state,
+                warehousesData: []  
             }
         }
         // ERROR
@@ -73,3 +78,5 @@ function novaPostReducers(state = initialState, action) {
 }
 
 export default novaPostReducers;
+            
+        
