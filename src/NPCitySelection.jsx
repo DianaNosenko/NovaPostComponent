@@ -16,7 +16,7 @@ const NPCitySelection = (props) => {
     setSelectedCityRef,
     setSelectedWarehouse,
   } = props;
-  const { citiesData, selectedCity } = props;
+  const { citiesData, selectedCity, setWarehousesOpen } = props;
 
   const [citiesInputValue, setCitiesInputValue] = useState(""); //считывание ввода пользователя
   const [cityOpen, setCityOpen] = useState(false); // открыть/закрыть окно с городами
@@ -75,6 +75,7 @@ const NPCitySelection = (props) => {
     setCityOpen(false);
   };
 
+  // реф для получения доступа к предыдущему состоянию
   const prevCitiesInputValueRef = useRef("");
 
   const inputOnChangeHandler = (e) => {
@@ -123,9 +124,8 @@ const NPCitySelection = (props) => {
   }, []);
 
   return (
-    <div className={styles.wrap}>
       <div className={styles.componentWrap}>
-        <div className={styles.field} onClick={() => setCityOpen(!cityOpen)}>
+        <div className={styles.field} onClick={() => {setCityOpen(!cityOpen); setWarehousesOpen(false)}}>
           {selectedCity
             ? selectedCity.length > 40
               ? `${selectedCity.slice(0, 40)}...`
@@ -200,7 +200,6 @@ const NPCitySelection = (props) => {
           )}
         </div>
       </div>
-    </div>
   );
 };
 

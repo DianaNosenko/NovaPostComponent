@@ -9,11 +9,10 @@ import { connect } from "react-redux";
 
 const NPWarehouseSelection = (props) => {
   const { getWarehousesDataAction, setSelectedWarehouse } = props;
-  const { warehousesData, selectedWarehouse, selectedCity, selectedCityRef } =
-    props;
+  const { warehousesData, selectedWarehouse, selectedCity, selectedCityRef } = props;
+  const {warehouseOpen, setWarehousesOpen} = props;
 
   const [warehousesInputValue, setWarehousesInputValue] = useState(""); //считывание ввода пользователя
-  const [warehouseOpen, setWarehousesOpen] = useState(false); // открыть/закрыть окно с отделениями
   const [warehouseCurrentPage, setWarehouseCurrentPage] = useState(1);
   const [warehouseFetching, setWarehouseFetching] = useState(true);
 
@@ -24,20 +23,20 @@ const NPWarehouseSelection = (props) => {
   };
   const newBody = { ...bodyWarehouses, methodProperties };
 
-  // смена данных при смене города
+  // смена данных отделений при смене города
   useEffect(() => {
     if (selectedCityRef.length) {
       getWarehousesDataAction({ data: newBody, newCity: true });
     }
   }, [selectedCityRef]);
 
-  // пагинация
+  // пагинация + запрет на прогрузку отделений при загрузке страницы
   useEffect(() => {
-    if (warehouseFetching) {
+    if (warehouseFetching && selectedCityRef.length) {
       getWarehousesDataAction({ data: newBody }); // пагинация
       setWarehouseFetching(false);
     }
-  }, [warehouseFetching]);
+  }, [warehouseFetching, selectedCityRef]);
 
   // Установка выбранного отделения в инпут
   const handleWarehouseChange = (warehouse) => {
@@ -86,7 +85,6 @@ const NPWarehouseSelection = (props) => {
   }, []);
 
   return (
-    <div className={styles.wrap}>
       <div className={styles.componentWrap}>
         <div
           className={styles.field}
@@ -164,7 +162,6 @@ const NPWarehouseSelection = (props) => {
           </div>
         </div>
       </div>
-    </div>
   );
 };
 
