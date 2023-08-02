@@ -16,7 +16,13 @@ const NPCitySelection = (props) => {
     setSelectedCityRef,
     setSelectedWarehouse,
   } = props;
-  const { citiesData, selectedCity, setWarehousesOpen } = props;
+  const {
+    citiesData,
+    selectedCity,
+    setWarehousesOpen,
+    prevCityIdRef,
+    selectedCityRef,
+  } = props;
 
   const [citiesInputValue, setCitiesInputValue] = useState(""); //считывание ввода пользователя
   const [cityOpen, setCityOpen] = useState(false); // открыть/закрыть окно с городами
@@ -75,7 +81,7 @@ const NPCitySelection = (props) => {
     setCityOpen(false);
   };
 
-  // реф для получения доступа к предыдущему состоянию
+  // реф для получения доступа к предыдущему значению поля ввода
   const prevCitiesInputValueRef = useRef("");
 
   const inputOnChangeHandler = (e) => {
@@ -105,7 +111,6 @@ const NPCitySelection = (props) => {
   useEffect(() => {
     const scrollEndReached = scrollHeight - (scrollFromTop + clientHeight);
     if (scrollEndReached < 1 && scrollEndReached !== 0) {
-      // console.log('scroll');
       setCityFetching(true);
       setCityCurrentPage((prev) => (prev += 1));
     }
@@ -122,84 +127,89 @@ const NPCitySelection = (props) => {
       }
     };
   }, []);
-
   return (
-      <div className={styles.componentWrap}>
-        <div className={styles.field} onClick={() => {setCityOpen(!cityOpen); setWarehousesOpen(false)}}>
-          {selectedCity
-            ? selectedCity.length > 40
-              ? `${selectedCity.slice(0, 40)}...`
-              : selectedCity
-            : "Выберите город"}
-          <span>▼</span>
-        </div>
-        <div
-          className={styles.ul}
-          ref={scrollContainerRef}
-          style={{ display: cityOpen ? "block" : "none" }}
-        >
-          <div className={styles.placeholder}>
-            <span>🔎</span>
-            <input
-              type="text"
-              value={citiesInputValue}
-              onClick={() => setSelectedCity("")}
-              onChange={inputOnChangeHandler}
-              placeholder="Введите название города"
-              className={styles.input}
-            />
-          </div>
-          {!citiesInputValue ? (
-            <div id="citiesList" className={styles.list}>
-              {citiesData.map((city) => (
-                <option
-                  key={city.CityID}
-                  value={city.Description}
-                  className={`
-                    ${styles.li} 
-                    ${
-                      city.Description === selectedCity
-                        ? styles.selectedElement
-                        : ""
-                    }`}
-                  onClick={() => {
-                    if (city.Description !== selectedCity) {
-                      setSelectedCity(city.Description);
-                    }
-                    handleCityChange(city);
-                  }}
-                >
-                  {city.Description}
-                </option>
-              ))}
-            </div>
-          ) : (
-            <div id="citiesList" className={styles.list}>
-              {citiesData.map((city) => (
-                <option
-                  key={city.Ref}
-                  value={city.Present}
-                  className={`
-                    ${styles.li} 
-                    ${
-                      city.Description === selectedCity
-                        ? styles.selectedElement
-                        : ""
-                    }`}
-                  onClick={() => {
-                    if (city.Present !== selectedCity) {
-                      setSelectedCity(city.Present);
-                    }
-                    handleCityChangeForSearch(city);
-                  }}
-                >
-                  {city.Present}
-                </option>
-              ))}
-            </div>
-          )}
-        </div>
+    <div className={styles.componentWrap}>
+      <div
+        className={styles.field}
+        onClick={() => {
+          setCityOpen(!cityOpen);
+          setWarehousesOpen(false);
+        }}
+      >
+        {selectedCity
+          ? selectedCity.length > 40
+            ? `${selectedCity.slice(0, 40)}...`
+            : selectedCity
+          : "Выберите город"}
+        <span>▼</span>
       </div>
+      <div
+        className={styles.ul}
+        ref={scrollContainerRef}
+        style={{ display: cityOpen ? "block" : "none" }}
+      >
+        <div className={styles.placeholder}>
+          <span>🔎</span>
+          <input
+            type="text"
+            value={citiesInputValue}
+            onClick={() => setSelectedCity("")}
+            onChange={inputOnChangeHandler}
+            placeholder="Введите название города"
+            className={styles.input}
+          />
+        </div>
+        {!citiesInputValue ? (
+          <div id="citiesList" className={styles.list}>
+            {citiesData.map((city) => (
+              <option
+                key={city.CityID}
+                value={city.Description}
+                className={`
+                    ${styles.li} 
+                    ${
+                      city.Description === selectedCity
+                        ? styles.selectedElement
+                        : ""
+                    }`}
+                onClick={() => {
+                  if (city.Description !== selectedCity) {
+                    setSelectedCity(city.Description);
+                  }
+                  handleCityChange(city);
+                }}
+              >
+                {city.Description}
+              </option>
+            ))}
+          </div>
+        ) : (
+          <div id="citiesList" className={styles.list}>
+            {citiesData.map((city) => (
+              <option
+                key={city.Ref}
+                value={city.Present}
+                className={`
+                    ${styles.li} 
+                    ${
+                      city.Description === selectedCity
+                        ? styles.selectedElement
+                        : ""
+                    }`}
+                onClick={() => {
+                  if (city.Present !== selectedCity) {
+                    setSelectedCity(city.Present);
+                  }
+                  handleCityChangeForSearch(city);
+                }}
+              >
+                {city.Present}
+              </option>
+            ))}
+          </div>
+        )}
+      </div>
+    </div>
   );
 };
 

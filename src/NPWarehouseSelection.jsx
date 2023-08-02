@@ -9,19 +9,30 @@ import { connect } from "react-redux";
 
 const NPWarehouseSelection = (props) => {
   const { getWarehousesDataAction, setSelectedWarehouse } = props;
-  const { warehousesData, selectedWarehouse, selectedCity, selectedCityRef } = props;
-  const {warehouseOpen, setWarehousesOpen} = props;
+  const { warehousesData, selectedWarehouse, selectedCity, selectedCityRef } =
+    props;
+  const { warehouseOpen, setWarehousesOpen } = props;
 
   const [warehousesInputValue, setWarehousesInputValue] = useState(""); //считывание ввода пользователя
   const [warehouseCurrentPage, setWarehouseCurrentPage] = useState(1);
   const [warehouseFetching, setWarehouseFetching] = useState(true);
 
   const methodProperties = {
-    Page: warehouseCurrentPage,
+    Page: 1,
     Limit: 30,
     CityRef: selectedCityRef,
   };
   const newBody = { ...bodyWarehouses, methodProperties };
+
+  const methodPropertiesForPagination = {
+    Page: warehouseCurrentPage,
+    Limit: 30,
+    CityRef: selectedCityRef,
+  };
+  const newBodyForPagination = {
+    ...bodyWarehouses,
+    methodProperties: methodPropertiesForPagination,
+  };
 
   // смена данных отделений при смене города
   useEffect(() => {
@@ -33,7 +44,7 @@ const NPWarehouseSelection = (props) => {
   // пагинация + запрет на прогрузку отделений при загрузке страницы
   useEffect(() => {
     if (warehouseFetching && selectedCityRef.length) {
-      getWarehousesDataAction({ data: newBody }); // пагинация
+      getWarehousesDataAction({ data: newBodyForPagination }); // пагинация
       setWarehouseFetching(false);
     }
   }, [warehouseFetching, selectedCityRef]);
@@ -65,7 +76,6 @@ const NPWarehouseSelection = (props) => {
   useEffect(() => {
     const scrollEndReached = scrollHeight - (scrollFromTop + clientHeight);
     if (scrollEndReached < 1 && scrollEndReached !== 0) {
-      console.log("scroll");
       setWarehouseFetching(true);
       setWarehouseCurrentPage((prev) => ++prev);
     }
@@ -85,53 +95,51 @@ const NPWarehouseSelection = (props) => {
   }, []);
 
   return (
-      <div className={styles.componentWrap}>
-        <div
-          className={styles.field}
-          disabled={!selectedCity}
-          onClick={() =>
-            warehousesData.length > 0
-              ? setWarehousesOpen(!warehouseOpen)
-              : void 0
-          }
-        >
-          {warehousesData.length > 0
-            ? selectedWarehouse
-              ? selectedWarehouse.length > 40
-                ? `${selectedWarehouse.slice(0, 40)}...`
-                : selectedWarehouse
-              : "Выберите отделение"
-            : "Нет доступных отделений"}
-          <span>▼</span>
+    <div className={styles.componentWrap}>
+      <div
+        className={styles.field}
+        disabled={!selectedCity}
+        onClick={() =>
+          warehousesData.length > 0 ? setWarehousesOpen(!warehouseOpen) : void 0
+        }
+      >
+        {warehousesData.length > 0
+          ? selectedWarehouse
+            ? selectedWarehouse.length > 40
+              ? `${selectedWarehouse.slice(0, 40)}...`
+              : selectedWarehouse
+            : "Выберите отделение"
+          : "Нет доступных отделений"}
+        <span>▼</span>
+      </div>
+      <div
+        className={styles.ul}
+        ref={scrollContainerRef}
+        style={{ display: warehouseOpen ? "block" : "none" }}
+      >
+        <div className={styles.placeholder}>
+          <span>🔎</span>
+          <input
+            type="text"
+            value={warehousesInputValue}
+            onClick={() => setSelectedWarehouse("")}
+            onChange={(e) =>
+              setWarehousesInputValue(e.target.value.toLowerCase())
+            }
+            placeholder={
+              warehousesData?.length > 0
+                ? "Введите название отделения"
+                : "Нет доступных отделений"
+            }
+            className={styles.input}
+          />
         </div>
-        <div
-          className={styles.ul}
-          ref={scrollContainerRef}
-          style={{ display: warehouseOpen ? "block" : "none" }}
-        >
-          <div className={styles.placeholder}>
-            <span>🔎</span>
-            <input
-              type="text"
-              value={warehousesInputValue}
-              onClick={() => setSelectedWarehouse("")}
-              onChange={(e) =>
-                setWarehousesInputValue(e.target.value.toLowerCase())
-              }
-              placeholder={
-                warehousesData?.length > 0
-                  ? "Введите название отделения"
-                  : "Нет доступных отделений"
-              }
-              className={styles.input}
-            />
-          </div>
-          <div className={styles.list}>
-            {warehousesData.map((warehouse) => (
-              <option
-                key={warehouse.SiteKey}
-                value={warehouse.Description}
-                className={`
+        <div className={styles.list}>
+          {warehousesData.map((warehouse) => (
+            <option
+              key={warehouse.SiteKey}
+              value={warehouse.Description}
+              className={`
                       ${styles.li} 
                       ${
                         warehouse.Description.toLowerCase() ===
@@ -139,29 +147,29 @@ const NPWarehouseSelection = (props) => {
                           ? styles.selectedElement
                           : ""
                       }`}
-                style={{
-                  display: new RegExp(warehousesInputValue, "i").test(
-                    warehouse.Description
-                  )
-                    ? "block"
-                    : "none",
-                }}
-                onClick={() => {
-                  if (
-                    warehouse.Description.toLowerCase() !==
-                    selectedWarehouse.toLowerCase()
-                  ) {
-                    setSelectedWarehouse(warehouse.Description);
-                  }
-                  handleWarehouseChange(warehouse);
-                }}
-              >
-                {warehouse.Description}
-              </option>
-            ))}
-          </div>
+              style={{
+                display: new RegExp(warehousesInputValue, "i").test(
+                  warehouse.Description
+                )
+                  ? "block"
+                  : "none",
+              }}
+              onClick={() => {
+                if (
+                  warehouse.Description.toLowerCase() !==
+                  selectedWarehouse.toLowerCase()
+                ) {
+                  setSelectedWarehouse(warehouse.Description);
+                }
+                handleWarehouseChange(warehouse);
+              }}
+            >
+              {warehouse.Description}
+            </option>
+          ))}
         </div>
       </div>
+    </div>
   );
 };
 
